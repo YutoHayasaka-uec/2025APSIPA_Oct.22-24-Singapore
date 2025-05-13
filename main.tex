@@ -1,1 +1,606 @@
 
+%%「論文」，「レター」，「レター（C分冊）」，「技術研究報告」などのテンプレート
+%% v3.2 [2019/03/19]
+%% 1. 「論文」
+\documentclass[technicalreport]{ieicej}
+%\documentclass[invited]{ieicej}% 招待論文
+%\documentclass[survey]{ieicej}% サーベイ論文
+%\documentclass[comment]{ieicej}% 解説論文
+%\usepackage[dvips]{graphicx}
+%\usepackage[dvipdfmx]{graphicx,xcolor}
+% \usepackage[T1]{fontenc}
+% \usepackage{lmodern}
+% \usepackage{textcomp}
+% \usepackage{latexsym}
+% %\usepackage[fleqn]{amsmath}
+% %\usepackage{amssymb}
+% \usepackage{amsmath,amssymb}
+% %\usepackage{mathtools}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[dvipdfmx]{graphicx, xcolor}
+\usepackage{subfigure}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{setspace}
+\usepackage{url}
+\usepackage{siunitx}
+%\usepackage{physics}
+%\AtBeginDocument{\RenewCommandCopy\qty\SI}
+\usepackage{acronym}
+\usepackage{algorithm,  algpseudocode}
+\usepackage{mathtools}
+
+
+\setcounter{page}{1}
+\field{}
+\jtitle{ナイキストレートによる分数拡散率LoRaの提案}
+\etitle{FSF-LoRa: Fractional Spreading Factor LoRa for Flexible Data Rate Selection}
+\authorlist{%
+  \authorentry[r.saito@awcc.uec.ac.jp]{齊藤 稜弥}{Ryoya SAITO}{Tokyo}
+ \authorentry[\ adachi@awcc.uec.ac.jp]{安達 宏一}{Koichi ADACHI}{Tokyo}
+ %\authorentry[takyu@shinshu-u.ac.jp]{田久 修}{Osamu TAKYU}{Shinsyu}
+ %\authorentry[maiohta@fukuoka-u.ac.jp]{太田 真衣}{Mai OHTA}{Fukuoka}
+ %\authorentry[\ fujii@awcc.uec.ac.jp]{藤井 威生}{Takeo FUJII}{Tokyo}
+ %\authorentry[\ kumada@awcc.uec.ac.jp]{熊田 遼汰 }{Ryota KUMADA}{Tokyo}
+ }
+% \authorlist{%
+%  \authorentry{齊藤稜弥}{Ryoya Saito}{awcc}\MembershipNumber{1}
+%  %\authorentry{和文著者名}{英文著者名}{所属ラベル}\MembershipNumber{}
+%  %\authorentry[メールアドレス]{和文著者名}{英文著者名}{所属ラベル}\MembershipNumber{}
+%  %\authorentry{和文著者名}{英文著者名}{所属ラベル}[現在の所属ラベル]\MembershipNumber{}
+% }
+
+%\affiliate[所属ラベル]{和文所属}{英文所属}
+%\paffiliate[]{}
+%\paffiliate[現在の所属ラベル]{和文所属}
+\affiliate[Tokyo]{電気通信大学{　先端ワイヤレス・コミュニケーション研究センター}\\
+  〒182--8585 東京都調布市調布ヶ丘1-5-1}
+ {Advanced Wireless \& Communication Research Center,  The University of Electro-Communications\\
+  1--5--1 Chofugaoka, Chofu, Tokyo,
+  182--8585 Japan}
+\begin{document}
+
+\begin{abstract}
+%和文あらまし 500字以内
+近年，IoTの発展に伴い，長距離かつ省電力で通信可能なLPWANの規格であるLoRaWANが注目されている．LoRaWANの物理層で用いられているLoRa変調信号は，整数値のパラメータである拡散率により特徴づけられる．異なる拡散率のLoRa信号は多重伝送が可能である反面，拡散率を増加させるに従って，LoRa信号が伝送可能な情報量は減少する問題が存在する．
+本稿では，拡散率を分数に拡張する分数拡散率（FSF）を用いたFSF-LoRaを提案行う．既存のLoRa変調において拡散率は整数値のみであることに対して，FSF-LoRaはことにより，細分化されたデータレートを選択することが可能となる．
+本研究ではフラクショナル係数を導入し，FSF-LoRa信号のチップ長を変えずチップ数を増やすことで等価的にFSF-LoRa実現する手法を提案する．FSF-LoRaを用いることで通常LoRaが使用可能なデータレートの細分化が可能となり，信号多重を行うシステムにおいてスループットの向上が可能となる．拡散率が異なる干渉を考慮した計算機シミュレーションにより，フラクショナル係数が0.5の提案するFSF-LoRaはスループットを従来のLoRaと比較して約6\%向上できることを確認した．
+
+
+% 近年，IoTの発展に伴い，長距離かつ省電力で通信可能なLPWANの規格であるLoRaWANが注目されている．LoRaWANの物理層で用いられているLoRa変調信号は，整数値のパラメータである拡散率により特徴づけられる．異なる拡散率のLoRa信号は多重伝送が可能である反面，拡散率を増加させるに従って，LoRa信号が伝送可能な情報量は減少する問題が存在する．
+% %省電力で長距離通信が可能である反面，{\color{red}データレートが低いという課題がある\textbf{（この論文で考える内容って低データレートに関してなんだっけ？）}}．
+% 本稿では，拡散率を分数に拡張する分数拡散率（FSF）を用いたFSF-LoRaを提案行う．既存のLoRa変調において拡散率は整数値のみであることに対して，FSF-LoRaはことにより，細分化されたデータレートを選択することが可能となる．
+% %筆者らが以前提案したFSF-LoRaでは，LoRa信号のチップ長を伸ばすことによりFSFを等価的に実現していた．しかしながら，復調処理過程で発生する自己干渉成分により特性が劣化するというデメリットが存在した.
+% 本研究ではフラクショナル係数を導入し，FSF-LoRa信号のチップ長を変えずチップ数を増やすことで等価的にFSF-LoRa実現する手法を提案する．
+% % {\color{red}
+% FSF-LoRaを用いることで通常LoRaが使用可能なデータレートの細分化が可能となり，信号多重を行うシステムにおいてスループットの向上が可能となる．
+% %\textbf{（細分化できるから準直交性の関係があるんですか？）}}
+% 拡散率が異なる干渉を考慮した計算機シミュレーションにより，提案するFSF-LoRaが従来のLoRaシステムと比較してシステムスループットを約6\%向上できることを確認した．
+\end{abstract}
+\begin{jkeyword}
+LPWAN,\:LoRaWAN,\:LoRa,\: IoT
+\end{jkeyword}
+\begin{eabstract}
+%英文アブストラクト 100 words
+Recently, with the development of IoT, LoRaWAN has attracted attention as it enables communication over long distances with low power consumption.
+Whereas in existing LoRa modulation, the spreading factor (SF) can take an integer value only. This paper proposes Fractional Spreading Factor (FSF)-LoRa that allows the SF to take a fractional value.
+Since the signals with different FSF are semi-orthogonal with each other, multiplexing FSF-LoRa signals can increase the data rate compared to multiplexing LoRa signals.
+Computer simulations considering interference with a different spreading factor signal confirm that the proposed FSF-LoRa can improve the throughput by about 6\% compared to the conventional LoRa system.
+\end{eabstract}
+\begin{ekeyword}
+LPWAN,\:LoRaWAN,\:LoRa,\:IoT
+\end{ekeyword}
+\maketitle
+
+\section{まえがき}
+
+モノのインターネット（IoT: Internet-of-Things）は急速に発展しており，スマートシティ，環境モニタリング，スマート農業など多くの分野に広がりを見せている．IoTの発展に伴い低消費電力かつ長距離での通信を実現するLPWAN（Low Power Wide Area Network）技術に注目が集まっている\cite{7815384}．LPWANの主な規格として，免許不要の周波数帯を用いるLoRaWAN （Long Range Wide Area Network）\cite{7803607} やSigFox\cite{sigfox}，免許必須の周波数帯を用いるNB-IoT （Narrow Band-IoT）\cite{7876968}などが挙げられる．特に，LoRaWANはMAC層プロトコルがオープンソースであることから，利用者が柔軟にネットワークを構築することが可能であるため，技術的，商業的にも注目を集めている\cite{7803607,8795313}．LoRaWANの物理層では，チャープスペクトラム拡散（CSS: Chirp Spread Spectrum）を基にしたLoRa変調が用いられている\cite{WhatIsLoRa}．LoRa変調のチャープ信号は拡散率$s\in\{7, 8, 9, 10, 11, 12\}$と帯域幅$W$ [Hz]によって雑音耐性とスループット性能が特徴付けられる．LoRa信号が持つ高い雑音耐性により，LoRaWANは低消費電力かつ長距離での通信が可能となっている．一方でLoRa信号はデータレートが比較的低いことが欠点である．
+
+% 近年，LoRaの物理層に着目し，LoRa変調の高度化を行うことにより信号のデータレートやシステム全体でのスループットの向上を図る研究が盛んに行われている\cite{10391276}．
+近年，スループット向上を目的としたLoRa変調の高度化に関する研究が盛んに行われている\cite{10391276}．
+その代表例としてICS-LoRa （Interleaved-Chirp-Spreading LoRa） \cite{8607020}やSSK-LoRa（Slope-Shift-Keying LoRa） \cite{9709288}があげられる．これらのLoRa変調方式は，復調処理が複雑にはなるものの，いずれもスループットの向上が可能ではある．ICS-LoRa，SSK-LoRaはシンボルの多次元化を行うことによりスループットの向上を達成しているが，拡散率の個数によって決定される使用可能な通信チャネル数は依然として通常のLoRa変調と変わらない．
+
+拡散率が異なるLoRa信号同士は準直交性を持つため信号同士を多重化することが可能である．通常のLoRaでは信号多重を行う際には異なる拡散率を使用する必要がある．しかし，LoRa信号は拡散率をあげると伝送効率が低下してしまう．拡散率を1増加することで，拡散率増加前と比較して伝送効率は約57\%に低下する．そのため，ある同一の拡散率で信号伝送可能な2台の端末が存在した場合，それらの端末を多重するためには，1台の端末が使用する拡散率を1増加させる必要がある．そのため，システム全体として見るとスループット特性が劣化してしまう．
+整数値のみ選択可能であった拡散率を分数まで拡張することで，より柔軟なデータレートの選択が可能となると考えられる．
+そこで，我々は整数値のみが使用可能な拡散率を分数に拡張した，FSF（Fractional Spreading Factor）-LoRaの提案を行った\cite{saitoRCS10,GC3}．FSF-LoRaは使用可能な準直交チャネル数の増加とシステム全体での伝送効率の向上を目的としていた．さらに拡散率を分数にまで拡張したFSF-LoRa信号においては，異なる拡散率の信号間で準直交性が維持されるため，FSF-LoRaを用いて信号多重を行うことにより伝送効率の向上に繋がる．しかしながら，復調処理過程で自己干渉信号が生じていたため，全探索復調器と比較してシンボル誤り率（SER: Symbol Error Rate）特性が劣化していた\cite{GC3,saitoRCS10}．
+
+本稿では，チップ数を増やすことにより分数拡散率を実現するFSF-LoRaを提案する．本稿のチップ数ベースのFSF-LoRaは以前のチップ長ベースのFSF-LoRaと比較してSER特性を向上できることを計算機シミュレーションにより示す．また，本稿におけるチップ数ベースのFSF-LoRaは通常使用されるLoRaと比較してスループットの向上が可能であることを示す．
+
+本稿は以下の構成となっている．第2節では提案手法であるFSF-LoRaの詳細を示し，FSF-LoRaの復調処理について述べ，第3節では計算機シミュレーション結果に基づいた評価及び考察を行い，第4節にてまとめと今後の課題について述べる．
+
+% また， oRaWANのアクセス方式にはALOHA方式が一般的に採用されているが\footnote{送信前のキャリアセンスが必須な地域も存在する．}，ランダムアクセス方式であるためパケット衝突が起こりやすくシステム容量の減少につながる．そのため，無線リソースや拡散率の割り当てなどによるシステム容量向上に関する検討が行われている\cite{8115779}．
+
+% 各$SF$で特徴付けられた信号間は準直交性であり, 参照信号が$SF=7$, 干渉信号が$SF=8$ の環境でBERが1\%を達成するのに必要な$\mathrm{SIR}$は$\mathrm{SIR}=-11[\mathrm{dB}]$である\cite{8267219}．
+
+% 一方で，物理層でのスループットの向上を目的とした研究には，
+\color{black}
+\section{提案手法}
+\subsection{FSF-LoRaの概要}\label{sec:FSF}
+本節では提案手法であるFSF-LoRaについて詳細に述べる．
+LoRa信号では，拡散率を1増加させることで，シンボルあたりの伝送可能な情報を1ビット増加させることが可能である．また，拡散率が大きければ受信感度が高くなる（より低いSNR領域で動作可能となる）．しかしながら，LoRa信号の使用帯域幅$W$を固定とした場合，拡散率を1増加させるとシンボル時間$T_\mathrm{s}$が2倍になるため，伝送効率が約0.57倍となる．提案手法のFSF-LoRaを導入することにより，通常LoRa信号の拡散率を1あげることによる伝送効率の減少幅を抑えることが可能となる．
+
+
+
+\subsection{FSF-LoRa信号}
+FSF-LoRa信号は通常のLoRa信号をベースとして設計される．LoRa信号は瞬時周波数を時間的に線形変化させることでシンボルを表現する．一般に，LoRa信号は帯域幅 $W$ \si{[Hz]} と拡散率 $s\in\{7,8,9,10,11,12\}$ により特徴づけられ，拡散率は整数値のみを取る．それに対して，FSF-LoRaでは追加パラメータであるフラクショナル係数 $0\le\rho <1$を導入し，等価的に非整数値の拡散率を実現する．
+
+% {\color{red}ここで，フラクショナル係数$\rho$を導入し，シンボル時間$T_\mathrm{s}$が$1+\rho$倍され，表現可能なシンボル数が$1+\rho$ 倍となるようにFSF-LoRa信号を設計する．}\textbf{（ここって強調する部分でしょうか？むしろSFを+1しなくて済むからレート損失が小さくなることを言った方が良いのでは？）}
+
+本提案では，チップ数を増やすことによりFSF-LoRaの実現を図る．FSF-LoRaの1シンボルあたりのチップ数はフラクショナル係数$ \rho $を用いて，$(1+\rho)2^s$で表すことができる．ここで，チップ数は整数値を取るため，拡散率$s\in\{7,8,9,10,11,12\}$が与えられた時，フラクショナル係数$\rho$は次式を満たす必要がある．
+\begin{equation}
+\rho\coloneqq\alpha\cdot 2^{-s},\ \alpha\in \{\mathbb{Z}\mid 0\le \alpha <2^s\}\ .   
+\end{equation}
+
+よって，フラクショナル係数を用いてFSF-LoRaのシンボル時間は次のように表される．
+\begin{equation}
+    T_\mathrm{s}\coloneqq\left((1+\rho)\cdot 2^s\right)\cdot T_\mathrm{c}
+\end{equation}
+ここで，$T_\mathrm{c}=1/W$ \si{[sec]}はチップ長を表し，使用する帯域幅の逆数で与えられる．
+% {\color{red}本稿でのFSF-LoRa信号のシンボル長はチップ数が$(1+\rho)\cdot 2^s$個となるように定義されている．\textbf{（この文章は必要？）}}
+
+FSF-LoRa信号の瞬時周波数を$f(t)$とすると，瞬時周波数の変化率$df(t)/dt$は与えられた帯域幅を端から端まで横断可能な値を取る．よって瞬時周波数の変化率$df(t)/dt$は次のように表される．
+\begin{align}
+\frac{df(t)}{dt}&=\frac{W}{ T_\mathrm{s}}=\frac{W}{ (1+\rho)\cdot2^s\cdot T_\mathrm{c}}\notag\\
+&=\frac{1}{ (1+\rho)\cdot2^s\cdot T_\mathrm{c}^2}\ .
+\end{align}
+
+初めにFSF-LoRa信号の基準アップチャープを求め，基準アップチャープを巡回シフトすることによりシンボルを表す．初期瞬時周波数を$f(0)=f_0$と置くと,基準アップチャープの位相$\phi(t)$は次のように表される．
+
+\begin{equation}
+    \phi(t)=2\pi\int_0^t f(t)dt=\frac{2\pi}{(1+\rho)2^{s+1}\cdot (T_\mathrm{c})^2}t^2+2\pi f_0t
+\end{equation}
+
+よって基準アップチャープのFSF-LoRaの連続時間信号は次のように表される．
+\begin{align}
+    x_0^{\mathrm{RF}}(t)&=\frac{1}{\sqrt{(1+\rho)2^s}}\exp\left(\phi(t)\right)\notag\\
+    &=\frac{1}{\sqrt{(1+\rho)2^s}}\exp\left(\frac{j2\pi}{(1+\rho)2^{s+1}\cdot (T_\mathrm{c})^2}t^2\right)\notag\\ 
+    &\quad \cdot \exp\left(j2\pi f_0t\right)
+\end{align}
+
+% {\color{red}図\ref{hogehoge}に通常LoRa信号とFSF-LoRa信号の比較図を示す．使用する帯域幅と拡散率を同じとすると，フラクショナル係数$\rho$により，FSF-LoRa信号のシンボル長は$1+\rho$倍となる（チップ数が$1+\rho$倍された信号）．文献\cite{}のFSF-LoRaとの比較を同様に図\ref{hogehoge}に示す．基準アップチャープの連続時間信号は同じであるが，チップ長の定義とチップ数が異なる．文献\cite{}でのFSF-LoRaのチップ長は$(1+\rho)\cdot 1/W$で表され，通常のLoRa信号と比較して$(1+\rho)$倍に伸びている．FCを用いて伸ばしたチップ長を基準として巡回シフトを行っていた．本稿のFSF-LoRaではチップ長を一般的なLoRa信号と等しく設定し，チップ数を増やすことで瞬時周波数の増加率を制御している点で異なる．\textbf{（前回の提案FSF-LoRaと今回のものが混ざってませんか？）}}
+
+
+%図\ref{hogehoge}に使用する帯域幅，拡散率を同一とした時の通常LoRa信号と提案するFSF-LoRaの基準アップチャープの比較を示す．
+本提案手法であるチップ数ベースのFSF-LoRa信号はフラクショナル係数$\rho$を用いてチップ数を$(1+\rho)$倍に増やすことにより，LoRa信号が時間方向に$(1+\rho)$倍に引き伸ばされた信号となっている．
+
+FSF-LoRa信号が表現可能なシンボル数はチップ数と同じ値$(1+\rho)2^s$である．送信シンボルを$m\in \{0,\ldots,(1+\rho)2^s-1\}$とすると，FSF-LoRa信号の等価低域系表現$x_m(t)$は以下のように表される．
+\begin{align}
+x_m(t)=
+\begin{cases}
+    \displaystyle\frac{1}{\sqrt{(1+\rho)2^s}}\exp\left(\frac{j2\pi}{(1+\rho)2^{s+1}\cdot T_\mathrm{c}^2}t^2\right)\\
+\quad\cdot\exp\left(j2\pi\left(\frac{m\cdot W}{(1+\rho)2^s}\right)t\right)\\
+\quad \mathrm{for}\ 0\le t<m\cdot T_\mathrm{c}\\
+\displaystyle \frac{1}{\sqrt{(1+\rho)2^s}}\exp\left(\frac{j2\pi}{(1+\rho)2^{s+1}\cdot T_\mathrm{c}^2}t^2\right)\\
+\quad\cdot\exp\left(-j2\pi\left(W-\frac{m\cdot W}{(1+\rho)2^s}\right)t\right)\\
+\quad\mathrm{for}\ m\cdot T_\mathrm{c}\le t< T_\mathrm{s}\\
+\end{cases}
+\end{align}
+チップ長$T_\mathrm{c}$にてサンプリングされた離散時間信号$x_m[k]$は次のように表される．
+\begin{align}
+    x_m[k]&=x_m(k\cdot T_\mathrm{c})\notag\\
+ %=% &\begin{cases}
+% \exp\left(\frac{j2\pi\cdot k^2}{(1+\rho)2^{s+1}}+j2\pi\frac{m}{(1+\rho)2^s}k\right)\\
+% \ \mathrm{for}\ 0\le k<m\\
+% \exp\left(\frac{j2\pi\cdot k^2}{(1+\rho)2^{s+1}}-j2\pi\left(\frac{(1+\rho)2^s-m}{(1+\rho)2^s}\right)k\right)\\\ \mathrm{for}\ m\le k<(1+\rho)\cdot 2^s
+% \end{cases}\\
+&=
+\begin{cases}
+    \displaystyle\frac{1}{\sqrt{(1+\rho)2^s}}\exp\left(j2\pi\left(\frac{k^2+2mk}{(1+\rho)2^{s+1}}\right)\right)\\\quad \mathrm{for}\ 0\le k<m
+\\
+\displaystyle \frac{1}{\sqrt{(1+\rho)2^s}}\exp\left(j2\pi\left(\frac{k^2-2\left((1+\rho)2^s-m\right)k}{(1+\rho)2^{s+1}}\right)\right)\\
+\quad \mathrm{for}\ m\le k<(1+\rho)\cdot 2^s
+\end{cases}
+\end{align}
+
+本稿では通常のLoRa受信と同じ非同期検波を仮定して議論を進める．また，場合分けで表された離散時間等価低域系のFSF-LoRa信号はモジュロ演算を用いて書き直すことが可能である．復調過程において初期位相の違いは影響しないためFSF-LoRa信号はモジュロ演算$(\cdot)_{\bmod{A}}$ ($A$は整数値の除数)を用いて式\eqref{eq:modu-fsf-sig}のように表される．
+
+\begin{align}\label{eq:modu-fsf-sig}
+    x_m[k]&=\frac{1}{\sqrt{(1+\rho)2^s}}\exp\left(j2\pi \frac{\left((k+m)_{\bmod (1+\rho)\cdot 2^s}\right)^2}{(1+\rho) \cdot 2^{s+1}}\right)
+\end{align}
+フラクショナル係数が$\rho=0$の時，式\eqref{eq:modu-fsf-sig}は通常のLoRaと同じ信号を表す．
+
+図\ref{fig:fsf-lora}に式\eqref{eq:modu-fsf-sig}にて表されるFSF-LoRa信号の概念図を示す．$m=0$の基準アップチャープを時間方向に$m\cdot T_\mathrm{c}$だけ巡回シフトさせることでシンボル$m$を表現している．
+
+\begin{figure}[t] 
+\centering
+\includegraphics[width=8cm]{fig/fsf-lora_v2.png}
+\caption{チップ数ベースのFSF-LoRaの概念図}
+\label{fig:fsf-lora}
+\end{figure}
+
+\subsection{FSF-LoRa復調器}\label{sec:demodu}
+本稿では，完全な時間・周波数同期がとれているものと仮定する．また，本節では一般性を失うことなく雑音の影響がない場合の復調過程について説明する．
+
+FSF-LoRa信号は通常のLoRaと同様に以下のステップで復調可能である．
+
+\begin{enumerate}
+    \item 受信信号への基準ダウンチャープ乗算（逆拡散処理）
+    \item 逆拡散後の信号への離散フーリエ変換処理
+    \item DFT後の信号から$\mathrm{argmax}$によるシンボル推定
+\end{enumerate}
+
+
+シンボル$m=0$を表す基準アップチャープの複素共役$(\cdot)^*$を取った信号$\{x_0^*\}$が基準ダウンチャープを表す．逆拡散は基準ダウンチャープを受信信号に乗算する処理を表し，$x_m[k]\cdot x_0^*[k],\ \mathrm{for}\ 0\le k< T_\mathrm{s}$と表され，場合分けを用いて次のように表される．%{\color{red}\textbf{（場合分けの条件がないです）}}
+
+\begin{align}\label{eq:de-spreading_signal}
+ &x_m[k]\cdot x_0^*[k]\notag\\
+%&=
+% \frac{1}{{(1+\rho)2^s}}\exp\left(j2\pi \frac{\left((k+m)_{\mod  (1+\rho)\cdot 2^s}\right)^2-k^2}{(1+\rho)  \cdot 2^{s+1}}\right)
+% \\
+% &=
+&=\begin{cases}
+\displaystyle \frac{1}{{(1+\rho)2^s}}\exp\left(j2\pi \frac{2km+m^2}{(1+\rho)  \cdot 2^{s+1}}\right)\\
+\quad \mathrm{for}\ 0\le k < m\\
+\displaystyle \frac{1}{{(1+\rho)2^s}}\exp\left(j2\pi \frac{\left(k+m-(1+\rho)\cdot 2^s\right)^2-k^2}{(1+\rho)  \cdot 2^{s+1}}\right)\\
+\quad \mathrm{for}\ m\le k<(1+\rho)\cdot 2^s\\
+\end{cases}
+\end{align}
+
+次に逆拡散後の信号にDFTを適用する．ここでのDFTはサンプル数が$(1+\rho)2^s$個であることに注意する．$n$番目の周波数インデックスのDFT出力は次の式で表される．
+
+\begin{align}
+&d_m[n]=\sum_{i=0}^{{2^{s}-1}}\underbrace{x_m[k]\cdot x_0^*[k]}_{\mathrm{Dechirping}}\cdot \exp\left(-j2\pi\frac{nk}{(1+\rho)2^s}\right) \notag\\
+&=
+\begin{cases}
+\displaystyle \sum_{k=0}^{(1+\rho)2^s-1}\frac{1}{{(1+\rho)2^s}}\exp\left(j2\pi \varphi_1 (k)\right),\ \\\quad\mathrm{for}\  0\le k < (1+\rho)2^s-m\\
+\displaystyle \sum_{k=0}^{(1+\rho)2^s-1}\frac{1}{{(1+\rho)2^s}}\exp\left(j2\pi \varphi_2 (k)\right),\\\quad\mathrm{for}\   (1+\rho)2^s-m\le k <(1+\rho)2^s\ ,
+\end{cases} \label{eq:row-dft}
+\end{align}
+
+ここで，場合分けの中の位相を表す$\varphi_1 (k)$と$\varphi_2 (k)$は次式で与えられる．
+\begin{equation}
+    \begin{cases}
+    \displaystyle \varphi_1 (k)=\frac{2k(m-n)+m^2}{(1+\rho)  \cdot 2^{s+1}}\ ,\\
+    \displaystyle \varphi_2 (k)=\frac{2k\left(m-n-(1+\rho)\cdot 2^s\right)+(m-(1+\rho)2^s)^2}{(1+\rho)  \cdot 2^{s+1}}\ .
+    \end{cases}
+\end{equation}
+まず，$\exp(j2\pi\varphi_2)$に注目し，式変形を行う．
+\begin{align}
+&\exp\left(j2\pi \varphi_2 (k)\right)\notag\\
+% &=\exp\left(j2\pi\left( \frac{2k\left(m-n\right)}{(1+\rho)  \cdot 2^{s+1}}-k\right)\right)\notag\\
+% &\quad\cdot\exp\left(j2\pi\left(\frac{m^2+2m(1+\rho)2^s+(1+\rho)2^{2s}}{(1+\rho)2^{s+1}}\right)\right)\notag\\
+&=\exp\left(j2\pi \left(\frac{2k\left(m-n\right)}{(1+\rho)  \cdot 2^{s+1}}-k\right)\right)\notag\\
+&\quad \cdot\exp\left(j2\pi \left(\frac{m^2}{(1+\rho)2^{s+1}}+m+2^{s-1}\right)\right)\notag\\
+&=\exp\left(j2\pi \frac{2k\left(m-n\right)+m^2}{(1+\rho)  \cdot 2^{s+1}}\right).\label{eq:varphi_2}
+\end{align}
+
+よって式\eqref{eq:varphi_2}より式\eqref{eq:row-dft}は，場合分けを用いず以下のように簡単化できる．
+\begin{align}
+d_m[n]&=\sum_{k=0}^{(1+\rho)2^s-1}
+\frac{1}{{(1+\rho)2^s}}\exp\left(j2\pi \varphi_1 (k)\right) \notag\\
+&=\frac{1}{{(1+\rho)2^s}}\cdot\exp\left(j2\pi\frac{m^2}{(1+\rho)  \cdot 2^{s+1}}\right)\notag\\
+&\quad \cdot\sum_{k=0}^{(1+\rho)2^s-1}\exp\left(j2\pi \frac{2k(m-n)}{(1+\rho)  \cdot 2^{s+1}}\right).
+\end{align}
+
+次にDFT結果が送信シンボル$m$に一致する周波数インデックス$n$のみピークが立つことを示す．
+
+初めに$m=n$の場合を考える．$m=n$の時，$\varphi_1(k)=0$となるので
+\begin{align}
+&\frac{1}{{(1+\rho)2^s}}\sum_{k=0}^{(1+\rho)2^s-1}\exp\left(j2\pi \frac{2k(m-n)}{(1+\rho)  \cdot 2^{s+1}}\right)\notag\\
+&=\frac{1}{{(1+\rho)2^s}}\left(\sum_{k=0}^{(1+\rho)2^s-1}1\right)\notag\\
+&=1\label{eq:n=m}
+\end{align}
+
+続いて，$n\neq m$の場合のDFT結果を考える．この時，DFT結果は$1$ではない複素数の等比数列の和と考えると次のようになる．
+
+\begin{align}
+&\frac{1}{{(1+\rho)2^s}}\sum_{k=0}^{(1+\rho)2^s-1}\exp\left(j2\pi \frac{2k(m-n)}{(1+\rho)  \cdot 2^{s+1}}\right)\notag\\
+&=\frac{1}{{(1+\rho)2^s}}\frac{1-\underbrace{\exp\left(j2\pi(m-n)\right)}_{=1}}{1-\underbrace{\exp\left(j2\pi \frac{2(m-n)}{(1+\rho)2^{s+1}}\right)}_{\neq 1}}\notag\\
+&=0\ .\label{eq:nneqm}
+\end{align}
+
+よって式\eqref{eq:n=m}と式\eqref{eq:nneqm}によりDFT結果の絶対値%{\color{red}\textbf{（細かい指摘になりますが，式(16)はDFT結果ではなく，DFT結果の絶対値ですよね？）}}
+は次のように表される．
+\begin{align}
+|d_m[n]|&=\delta(m-n)
+\end{align}
+ここで，$\delta(\cdot)$はクロネッカーのデルタ関数を表す．ここまでの導出により，雑音がない場合，逆拡散後の信号のDFT出力は送信シンボル$m$と一致した周波数インデックス$n$にのみピークが立つことを示している．
+よって，推定シンボル$\hat{m}\in\mathcal{M}=\{0,1,\ldots,(1+\rho)2^s-1\}$は次のように求めることが可能である．
+\begin{align}
+\hat{m}=\mathop{\mathrm{argmax}}_{n\in\mathcal{M}}|d_m[n]|
+\end{align}
+
+シンボルあたりで伝送可能なビット数$B_\mathrm{s}$\si{[bits/symbol]}は$\lfloor s+\log_2(1+\rho) \rfloor=s$で表される．固定されたビット割り当てを用いた場合は，それぞれのシンボルにビット割り当てを行う際に使用することがないシンボルが$\rho\cdot 2^s$個存在することになる．これらの余剰シンボルの利用法は本稿の検討範囲外である．
+
+\subsection{FSF-LoRaの理想的なデータレート}
+次に，FSF-LoRaで達成できる理想的なデータレート$R_\mathrm{idl}$ \si{[bits/sec]}は，使用周波数帯域幅$W$と符号化率$\mathrm{CR}$を用いて，次のように表される．
+\begin{equation}
+    R_\mathrm{idl}(s,\rho)=\mathrm{CR}\cdot\frac{\lfloor s+\log_2(1+\rho)\rfloor}{(1+\rho)\cdot2^s\cdot1/W}
+\end{equation}
+ここで，帯域幅と符号化率を固定し，拡散率$s=7$を用いた通常のLoRaのデータレート$R_\mathrm{idl}(7,0)$で正規化したデータレートを$R_\mathrm{n}(s,\rho)$%{\color{red}\textbf{（変数はいらないのですか？）→欲しいです．}}
+とすると，提案するFSF-LoRaのデータレートは図\ref{fig:datarate}のようなグラフで表される．ここで，表記の簡略化のためフラクショナル係数を考慮した等価拡散率$s_\mathrm{f}=s+\rho$を導入している．図\ref{fig:datarate}は，フラクショナル係数$\rho$が1に近い値の時を除き，FSF-LoRa信号のデータレートは拡散率$s$が1異なるLoRa信号のデータレートの間を取ることを示している．FSF-LoRaのシンボル時間$T_\mathrm{s}$が各LoRa信号のシンボル時間の間を取るため，データレートの減少幅の低減が可能となっている．しかし，FSF-LoRa1シンボルあたりに伝送可能なビット数は拡散率$s$に等しいため，データレートが各拡散率の間を取らないフラクショナル係数を持つFSF-LoRa信号が存在することがわかる．
+%{\color{red}\textbf{（この結果から何が言えるのかを書いた方が良いです）}}
+
+\begin{figure}[t] 
+\centering
+\includegraphics[width=8cm]{fig/datarate_comp_v3.png}
+\caption{チップ数ベースのFSF-LoRa信号とLoRa信号の正規化された理想的なデータレート}
+\label{fig:datarate}
+\end{figure}
+
+
+
+\section{計算機シミュレーション}
+主要なシミュレーション諸元を表\ref{tab:awgn-ser-simu-gen}に示す．初めに，加法性白色ガウス雑音（AWGN: Additive White Gaussian Noise）環境下で端末が1台のみの上りリンクを想定した計算機シミュレーションによる，FSF-LoRaの性能評価を行う．特に，通常のLoRaと文献\cite{GC3}にて提案したFSF-LoRaと復調器との比較に焦点を当て性能評価を行う．提案手法のビット割り当てでは，理想的に全てのシンボル$\mathcal{M}=\{0,\ldots,(1+\rho)\cdot 2^s-1\}$を使用すると仮定し，シンボルあたりに伝送可能なビット数は$B_\mathrm{s}=s$とする．また，理想的な時間・周波数同期を仮定する．
+\begin{table}[t]
+\centering
+\caption{シミュレーション諸元}
+\label{tab:awgn-ser-simu-gen}
+\begin{tabular}{c|c}\hline
+パラメータ&値\\\hline
+拡散率& $s\in \{7, 8\}$\\
+フラクショナル係数&$\rho\in\{0.25, 0.5, 0.75\}$\\
+帯域幅&{$W=125$\ \si{[kHz]}}\\
+平均SNR&$\mathrm{SNR}\in\{-20,\dots,0\}$\ \si{[dB]}\\
+Symbol&$m\in\mathcal{M}=\{0, \dots, (1+\rho)\cdot2^{s}-1\}$\\\hline
+\end{tabular}
+\end{table}
+
+
+
+図\ref{fig:SNR-SER-conv}に平均SNRに対する平均シンボル誤り率（SER: Symbol Error Rate）特性を示す．図\ref{fig:SNR-SER-conv}では通常の拡散率$s_\mathrm{f}=7,8$を用いたLoRa信号と，$s_\mathrm{f}=7.5$を用いた2つのFSF-LoRa信号(Prop.,Conv.\cite{GC3})の特性も比較のために示している．ここで，比較手法のFSF-LoRaのサンプリング周期は$1/W\cdot(1+\rho)/q $であり，通常LoRa信号のチップ長の$(1+\rho)/q$倍で行っていることに注意する．比較手法で用いられるオーバサンプリング係数は$q=2$とする．比較手法のFSF-LoRa (Conv.)では通常のLoRa信号$s_\mathrm{f}=7$と比較し，$10^{-4}$のSERを達成するために必要なSNRが約\SI{3}{[dB]}劣化している．一方で，提案手法のFSF-LoRaのSER特性を示す曲線（Prop.）は$s_\mathrm{f}=7,8$の間に存在している．
+% 通常のLoRa信号は使用する拡散率が大きくなるにつれて雑音耐性が向上する性質がある．
+
+\begin{figure}[t] 
+\centering
+\includegraphics[width=8cm]{fig/SER_use_conv.png}
+\caption{平均SNR対SER特性の比較}
+\label{fig:SNR-SER-conv}
+\end{figure}
+
+提案手法（Prop.）と既存手法（Conv.）のフラクショナル係数$\rho$を変化させた時の平均SER特性を図\ref{fig:SNR-SER}に示す．
+比較手法のFSF-LoRa (Conv.)は$\rho=0.25,0.5,0.75$の順，提案手法のFSF-LoRa (Prop.)は$\rho=0.75,0.5,0.25$の順でSER特性が良いことが読み取れる．比較手法において，等価拡散率の値が増加するにつれてSER性能が劣化しているが，この劣化は復調過程で生じる自己干渉信号を合成した後，$\mathrm{argmax}$によるシンボル判定を行うためである．自己干渉信号を生じる周波数インデックスが整数値でないため，特別な値のフラクショナル係数以外では隣接する周波数インデックスに分散されてDFTの絶対値のピークが現れる．そのため，今回使用したフラクショナル係数の値は増加するにつれて，比較手法のFSF-LoRaではSER性能が劣化してしまう．提案手法はフラクショナル係数の値が増加するにつれて拡散率が$s=8$の通常LoRa信号のSER性能に近づくことが分かる．
+%等価拡散率に比例して雑音耐性が向上する性質は通常LoRaが拡散率の増加に伴い雑音耐性が上がるという性質と合致し，FSF-LoRaに求める性質そのものである．
+
+
+
+\begin{figure}[t] 
+\centering
+\includegraphics[width=8cm]{fig/snr_conp_v2.png}
+\caption{平均SNR対SER特性のFSF-LoRa信号同士の比較}
+\label{fig:SNR-SER}
+\end{figure}
+
+次に，2端末が同時送信した場合のシミュレーション結果を示す．提案手法を用いた時のシステムと一般的なLoRa信号を用いたシステムを比較する．受信機における受信信号対干渉電力比（SIR: Signal-to-Interference Ratio）は\SI{0.0}{[dB]}とした．受信タイミングは同時であると仮定し，使用する等価拡散率$s_\mathrm{f}$の組は$(s_\mathrm{f},s_\mathrm{f})=(7,7.5),(7,8)$とする．図\ref{fig:int_ser}では他端末の干渉がない場合と比較するため，単一の信号を受信した時の特性も示す．多重された信号を受信した場合，等価拡散率の組にかかわらず，干渉信号の影響によって多重されていない単一（FSF-）LoRa信号のSER特性と比べて特性が劣化していることが分かる．2端末信号同時受信した場合のRef.$s_\mathrm{f}=7$に着目すると，干渉信号が$s_\mathrm{f}=7.5,8$のどちらも，$\mathrm{SER}=10^{-4}$において\SI{1}{[dB]}以上の劣化が見られる．また，$s_\mathrm{f}=7$のLoRa信号が多重されたFSF-LoRaのSER特性は$\mathrm{SER}=10^{-4}$において約\SI{1}{[dB]}の劣化が見られる．グラフ内のRef.$s_\mathrm{f}=7$に着目すると， $s_\mathrm{f}=8$を多重した場合と$s_\mathrm{f}=7.5$を多重した場合において$s_\mathrm{f}=7$を参照した場合のそれぞれの干渉は同程度であると言える．このことは$s_\mathrm{f}=7.5$の干渉信号と$s_\mathrm{f}=8$の信号は拡散率$s=7$の復調器の復調処理の中の逆拡散により，周波数領域においてどちらの干渉信号も同程度に電力が拡散されていることを示している．
+% 提案手法のFSF-LoRa，通常のLoRaの復調方法は\ref{sec:demodu}節に述べた通り，受信信号に対して逆拡散，DFTを行っている．
+また，復調器がFSF-LoRa信号を参照した時にLoRa信号が与える干渉の影響についても，同様に説明が可能である．一般にLoRa信号は拡散率が異なれば準直交性を持つ．そのため，拡散率が異なる信号を同時に受信した場合，受信機はそれぞれの信号を別々に復調することが可能である．今回のシミュレーション結果より，FSF-LoRaと異なる拡散率の信号との干渉が存在したとしても復調器はそれぞれの信号を復調可能であった．このことから本提案手法のFSF-LoRaは他拡散率の信号と準直交性を持つと言える．
+
+次に，2端末からの信号多重を行った環境におけるシステム全体のスループットを図\ref{fig:through}に示す．$(s_\mathrm{f},s_\mathrm{f})=(7,8),(7,7.5)$を比較しており，SNRが高い環境において，FSF-LoRaを用いた場合，最大約$6\%$の向上を確認した．%{\color{red}\textbf{（6\%の改善だけではなくシンボル長の短縮も実現できているんだよということを言った方がよいのではないですか？）}}言うとしてもここで言及することではないかなと思いました。シミュレーションによってわかることではないので。
+
+
+今回提案するチップ数ベースのFSF-LoRaは計算機シミュレーションの結果から他の等価拡散率の信号との準直交性を持つこと，FSF-LoRaのデータレートは拡散率を1あげたLoRa信号よりも大きいことから(図\ref{fig:datarate})，図\ref{fig:through}で示された通り，多くの端末を収容するシステムにおいてスループットの向上が期待できる．
+
+
+
+
+\begin{figure}[t] 
+\centering
+\includegraphics[width=8cm]{fig/int_ser_v2.png}
+\caption{二端末からの信号多重を行った環境での平均SNR対SER特性．}
+\label{fig:int_ser}
+\end{figure}
+
+\begin{figure}[t] 
+\centering
+\includegraphics[width=8cm]{fig/throughtput.png}
+\caption{二端末からの信号多重を行った環境での平均SNR対スループット特性}
+\label{fig:through}
+\end{figure}
+
+%\section{考察}
+% 図\ref{fig:SNR-SER-conv},\ref{fig:SNR-SER},\ref{fig:int_ser}において平均SNRが低い時にSERが低いほど，信号の雑音耐性が高いことを表すことに着目し，それぞれのグラフが示すことについて考察を行う．図\ref{fig:SNR-SER-conv}では$s_\mathrm{f}=7.5$の二種類のFSF-LoRaと，通常のLoRaの性能比較を行った．通常のLoRa信号は使用する拡散率が大きくなるにつれて雑音耐性が上がるという性質がある．提案手法のFSF-LoRaにおいて等価拡散率$s_\mathrm{f}$の前後に存在する整数値の拡散率の間を取るようなSER性能を持つ．比較手法によるFSF-LoRaは拡散率$s=7$の通常LoRaと比較し，大幅にSER性能が劣化しており，図\ref{fig:SNR-SER-conv}の$\mathrm{SER}=10^{-4}$において約\SI{3}{[dB]}の差が見られる．
+
+% 図\ref{fig:SNR-SER}ではFC $\rho$ を変化させた時の提案手法と比較手法のFSF-LoRaの特性比較を行った．比較手法において，等価拡散率の値が増加するにつれてSER性能が劣化している．この劣化は文献\cite{}における復調器に起因し，復調処理の中で生じる自己干渉信号を合成した後，$\mathrm{argmax}$によるシンボル判定を行うためである．自己干渉信号の生じる周波数インデックスが整数値でないため，隣接する周波数インデックスに分散されて現れるFC$\rho$が大多数である．そのため，今回使用したFCの値は増加するにつれて(等価拡散率が増加するにつれて)比較手法のFSF-LoRaではSER性能が劣化してしまう．提案手法はFCの値が増加するにつれて(等価拡散率が増加するにつれて)拡散率が$s=8$の通常LoRa信号のSER性能に近づくことが分かる．前述の性質は通常LoRaが拡散率の増加に伴い雑音耐性が上がるという性質と合致し，FSF-LoRaに求める性質そのものである．
+
+% 図\ref{fig:int_ser}では二端末から同時送信された時の干渉を考慮したシミュレーションであり，多重した場合の復調性能の劣化を評価したグラフである．一般にLoRa信号は拡散率が異なれば準直交性を持つことが知られている．言い換えれば，拡散率が異なる信号が同時に受信したとしても別々に復調することが可能である．図\ref{fig:int_ser}では他端末の干渉がない場合と比較するため，単一の信号を受信した時のSER特性(マーカーが無いグラフ)も示している．通常のLoRaにおいて多重する時に使用される拡散率の組とFSF-LoRaを用いて多重した場合の比較を行う．初めに，グラフ内のRef.$s_\mathrm{f}=7$に着目すると， $s_\mathrm{f}=8$を多重した場合と$s_\mathrm{f}=7.5$を多重した場合において$s_\mathrm{f}=7$を参照した場合のそれぞれの干渉は同程度であると言える．このことは$s_\mathrm{f}=7.5$の干渉信号と$s_\mathrm{f}=8$の信号は拡散率$s=7$の復調器の復調処理の中の逆拡散により，周波数領域においてどちらの干渉信号も同程度に電力が拡散されていることを示している．
+% % 提案手法のFSF-LoRa，通常のLoRaの復調方法は\ref{sec:demodu}節に述べた通り，受信信号に対して逆拡散，DFTを行っている．
+% また，FSF-LoRa信号を参照する復調器において$s=7$を用いるLoRa信号が与える干渉の影響についても，同様のことが言える．
+
+
+
+
+
+
+\section{まとめ}
+本稿ではチップ数を変化させることによるSF-LoRaの提案と復調処理の理論的な解析，及び計算機シミュレーションによる評価を行った．
+FSF-LoRaは既存のLoRaのデータレートと雑音耐性とデータレートの細分化を行うことが可能であることを確認した．計算機シミュレーションにて2端末を多重した環境において通常のLoRa信号と同様な他拡散率の信号と準直交性を持つことを示した．また，2端末の信号多重を行う環境において，従来のLoRaシステムが使用する拡散率の組と比較してFSF-LoRa（$\rho=0.5$）はシステムスループットを6\%向上できることを確認した．
+
+\begin{spacing}{1}
+  % \noindent
+  {\textbf{謝辞}\ 本研究開発は，総務省SCOPE(受付番号JP235004002)の委託によるものである．}
+\end{spacing}
+
+
+
+\bibliographystyle{jIEEEtran}
+\bibliography{bibtex}
+
+%\bibliographystyle{jplain}
+%\bibliographystyle{junsrt}
+
+
+% \appendix
+% \section{}
+
+% \begin{biography}
+% \profile{}{}{}
+% %\profile{会員種別}{名前}{紹介文}% 顔写真あり
+% %\profile*{会員種別}{名前}{紹介文}% 顔写真なし
+% \end{biography}
+
+\end{document}
+
+
+
+%% 2. 「レター」
+\documentclass[letter]{ieicej}
+%\usepackage[dvips]{graphicx}
+%\usepackage[dvipdfmx]{graphicx,xcolor}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{latexsym}
+%\usepackage[fleqn]{amsmath}
+%\usepackage{amssymb}
+
+\setcounter{page}{1}
+
+\typeofletter{研究速報}
+%\typeofletter{紙上討論}
+%\typeofletter{問題提起}
+%\typeofletter{ショートノート}
+\field{}
+\jtitle{}
+\etitle{}
+\authorlist{%
+ \authorentry{}{}{}{}\MembershipNumber{}
+ %\authorentry{和文著者名}{英文著者名}{会員種別}{所属ラベル}\MembershipNumber{}
+ %\authorentry{和文著者名}{英文著者名}{会員種別}{所属ラベル}[現在の所属ラベル]\MembershipNumber{}
+}
+\affiliate[]{}{}
+%\affiliate[所属ラベル]{和文所属}{英文所属}
+%\paffiliate[]{}
+%\paffiliate[現在の所属ラベル]{和文所属}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+%和文あらまし 120字以内
+\end{abstract}
+\begin{keyword}
+%和文キーワード 4〜5語
+\end{keyword}
+\begin{eabstract}
+%英文アブストラクト 50 words
+\end{eabstract}
+\begin{ekeyword}
+%英文キーワード
+\end{ekeyword}
+
+\section{まえがき}
+
+
+\ack %% 謝辞
+
+%\bibliographystyle{sieicej}
+%\bibliography{myrefs}
+\begin{thebibliography}{99}% 文献数が10未満の時 {9}
+\bibitem{}
+\end{thebibliography}
+
+\appendix
+\section{}
+
+\end{document}
+
+
+%% 3. 「レター（C分冊）」
+\documentclass[electronicsletter]{ieicej}
+%\usepackage[dvips]{graphicx}
+%\usepackage[dvipdfmx]{graphicx,xcolor}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{latexsym}
+%\usepackage[fleqn]{amsmath}
+%\usepackage{amssymb}
+
+\setcounter{page}{1}
+
+\field{}
+\jtitle{}
+\etitle{}
+\authorlist{%
+ \authorentry{}{}{}{}\MembershipNumber{}
+ %\authorentry{和文著者名}{英文著者名}{会員種別}{所属ラベル}\MembershipNumber{}
+ %\authorentry{和文著者名}{英文著者名}{会員種別}{所属ラベル}[現在の所属ラベル]\MembershipNumber{}
+}
+\affiliate[]{}{}
+%\affiliate[所属ラベル]{和文所属}{英文所属}
+%\paffiliate[]{}
+%\paffiliate[現在の所属ラベル]{和文所属}
+
+\begin{document}
+\begin{abstract}
+%和文あらまし 120字以内
+\end{abstract}
+\begin{keyword}
+%和文キーワード 4〜5語
+\end{keyword}
+\begin{eabstract}
+%英文アブストラクト 50 words
+\end{eabstract}
+\begin{ekeyword}
+%英文キーワード
+\end{ekeyword}
+\maketitle
+
+\section{まえがき}
+
+
+\ack %% 謝辞
+
+%\bibliographystyle{sieicej}
+%\bibliography{myrefs}
+\begin{thebibliography}{99}% 文献数が 10 未満の時 {9}
+\bibitem{}
+\end{thebibliography}
+
+\appendix
+\section{}
+
+\end{document}
+
+
+
+%% 4. 「技術研究報告」
+\documentclass[technicalreport]{ieicej}
+%\usepackage[dvips]{graphicx}
+%\usepackage[dvipdfmx]{graphicx,xcolor}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{latexsym}
+%\usepackage[fleqn]{amsmath}
+%\usepackage{amssymb}
+
+\jtitle{}
+\jsubtitle{}
+\etitle{}
+\esubtitle{}
+\authorlist{%
+ \authorentry[]{}{}{}
+% \authorentry[メールアドレス]{和文著者名}{英文著者名}{所属ラベル}
+}
+\affiliate[]{}{}
+%\affiliate[所属ラベル]{和文勤務先\\ 連絡先住所}{英文勤務先\\ 英文連絡先住所}
+
+\begin{document}
+\begin{jabstract}
+%和文あらまし
+\end{jabstract}
+\begin{jkeyword}
+%和文キーワード
+\end{jkeyword}
+\begin{eabstract}
+%英文アブストラクト
+\end{eabstract}
+\begin{ekeyword}
+%英文キーワード
+\end{ekeyword}
+\maketitle
+
+\section{はじめに}
+
+
+%\bibliographystyle{sieicej}
+%\bibliography{myrefs}
+\begin{thebibliography}{99}% 文献数が10未満の時 {9}
+\bibitem{}
+\end{thebibliography}
+
+\end{document}
